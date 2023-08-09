@@ -1,0 +1,11 @@
+{
+	"name": "backend",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"private": true,
+	"scripts": {},
+	"devDependencies": {
+		"serverless": "^3.34.0"
+	}
+}
