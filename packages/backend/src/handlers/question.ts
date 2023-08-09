@@ -1,4 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
+import { ERRORS } from "../constants";
 import { getCountriesData, getCountryAnswers } from "../utils/countries";
 import { format } from "../utils/format";
 
@@ -16,10 +17,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     const countries = await getCountriesData();
 
     if (!countries) {
-      return {
-        statusCode: 500,
-        body: "An error occured.",
-      };
+      throw new Error(ERRORS.COUNTRIES_NOT_FOUND);
     }
 
     const options = getCountryAnswers(countries.filter((item) => item.capital)); // Get the answers array
@@ -28,10 +26,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       console.log(
         "[question-handler] Something went wrong gathering the answers!"
       );
-      return {
-        statusCode: 500,
-        body: "An error occured.",
-      };
+      throw new Error(ERRORS.OPTIONS_FAILED_TO_GENERATE);
     }
 
     const [correctAnswer] = options; // Get the correct answer from the getCountryAnswers call. (ALWAYS first)
@@ -48,7 +43,8 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: "An error has occured!",
+        message: ERRORS.GENERIC_ERROR_MESSAGE,
+        error: error,
       }),
     };
   }
