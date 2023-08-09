@@ -13,6 +13,13 @@ functions:
           path: /
           method: get
 
+  question:
+    handler: src/handlers/question.handler
+    events:
+      - httpApi:
+          path: /get/question
+          method: get
+
 custom:
   serverless-offline:
     httpPort: 8080
