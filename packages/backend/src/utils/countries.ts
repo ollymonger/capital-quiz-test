@@ -60,6 +60,9 @@ export const getCountryAnswers = (
 
     do {
       // This is to always ensure that the correct answer does not appear twice.
+      console.log(
+        "[getCountryAnswers] incorrectIndex is the same as selectedIndex! Reselecting an incorrect answer!"
+      );
       incorrectIndex = Math.floor(Math.random() * data.length);
     } while (incorrectIndex === selectedIndex);
 
