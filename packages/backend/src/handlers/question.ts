@@ -1,6 +1,9 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { ERRORS } from "../constants";
-import { getCountriesData, getCountryAnswers } from "../utils/countries";
+import {
+  fetchCountriesWithCapitals,
+  generateQuizOptions,
+} from "../utils/countries";
 import { format } from "../utils/format";
 
 /**
@@ -14,13 +17,13 @@ import { format } from "../utils/format";
  */
 export const handler: APIGatewayProxyHandler = async (event, context) => {
   try {
-    const countries = await getCountriesData();
+    const countries = await fetchCountriesWithCapitals();
 
     if (!countries) {
       throw new Error(ERRORS.COUNTRIES_NOT_FOUND);
     }
 
-    const options = getCountryAnswers(countries.filter((item) => item.capital)); // Get the answers array
+    const options = generateQuizOptions(countries); // Get the answers array
 
     if (!options) {
       console.log(

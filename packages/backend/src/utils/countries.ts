@@ -1,6 +1,8 @@
 import { Country, GetCountriesResponseType, SelectedCountry } from "../types";
 
-export const getCountriesData = async (): Promise<Country[] | null> => {
+export const fetchCountriesWithCapitals = async (): Promise<
+  Country[] | null
+> => {
   try {
     const res = await fetch(
       "https://countriesnow.space/api/v0.1/countries/capital"
@@ -11,14 +13,12 @@ export const getCountriesData = async (): Promise<Country[] | null> => {
     const { error, data, msg } = parsed;
 
     if (error && !data) {
-      // Response always an "error" key. True = something went wrong.
-      console.log("[getCountriesData] " + msg); // parsing the MSG with error.
-      return null;
+      throw new Error(msg);
     }
 
-    return data;
+    return data.filter((country) => country.capital); // Ensure that countries have capitals.
   } catch (error) {
-    console.log("[getCountriesData] " + error);
+    console.log("[fetchCountriesWithCapitals] " + error);
     return null;
   }
 };
@@ -29,7 +29,7 @@ export const getCountriesData = async (): Promise<Country[] | null> => {
  * @returns An array of SelectedCountry representing the quiz answers, or undefined if data is empty.
  */
 
-export const getCountryAnswers = (
+export const generateQuizOptions = (
   data: Country[]
 ): SelectedCountry[] | undefined => {
   if (data.length === 0) {
@@ -43,7 +43,7 @@ export const getCountryAnswers = (
 
   if (!data[selectedIndex].capital) {
     console.log(
-      `[countries] Country ${data[selectedIndex].capital} does not have a capital. Skipping.`
+      `[generateQuizOptions] Country ${data[selectedIndex].capital} does not have a capital. Skipping.`
     );
     return undefined;
   }
@@ -61,7 +61,7 @@ export const getCountryAnswers = (
     do {
       // This is to always ensure that the correct answer does not appear twice.
       console.log(
-        "[getCountryAnswers] incorrectIndex is the same as selectedIndex! Reselecting an incorrect answer!"
+        "[generateQuizOptions] incorrectIndex is the same as selectedIndex! Reselecting an incorrect answer!"
       );
       incorrectIndex = Math.floor(Math.random() * data.length);
     } while (incorrectIndex === selectedIndex);
