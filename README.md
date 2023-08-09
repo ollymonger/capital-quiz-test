@@ -13,10 +13,13 @@ yarn (or npm) install
 ## Running the project
 
 To run the workspaces individually:
-"commands here"
+
+- `yarn backend:start` - to start the backend.
+- `yarn frontend:start` - to start the frontend.
 
 To run the workspaces together:
-"commands here"
+
+- `yarn start` - starts frontend and backend.
 
 ## Project aims
 
