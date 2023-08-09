@@ -4,8 +4,13 @@
 	"main": "index.js",
 	"license": "MIT",
 	"private": true,
-	"scripts": {},
+	"scripts": {
+		"start": "serverless offline"
+	},
 	"devDependencies": {
-		"serverless": "^3.34.0"
+		"@types/aws-lambda": "^8.10.119",
+		"serverless": "^3.34.0",
+		"serverless-offline": "^12.0.4",
+		"serverless-plugin-typescript": "^2.1.5"
 	}
 }

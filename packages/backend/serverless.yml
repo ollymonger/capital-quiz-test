@@ -1,0 +1,24 @@
+service: serverless-http-api-typescript
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  status:
+    handler: src/handlers/status.handler
+    events:
+      - httpApi:
+          path: /
+          method: get
+
+custom:
+  serverless-offline:
+    httpPort: 8080
+    stageVariables:
+      environment: "dev"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
