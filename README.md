@@ -28,6 +28,7 @@ To run the workspaces together:
 - A button to restart
 - Responsive UI
 - Should continue till the user chooses to exit the application.
+- FE network tab must never see the correct answer until the user has answered for security reasons.
 
 ## Future considerations
 
