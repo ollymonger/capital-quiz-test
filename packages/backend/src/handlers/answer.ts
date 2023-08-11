@@ -1,6 +1,6 @@
 // User should be able to answer here.
 import { APIGatewayProxyHandler } from "aws-lambda";
-import cache from "memory-cache";
+import { get } from "memory-cache";
 import { ERRORS } from "../constants";
 import { PostAnswerEventType } from "../types";
 
@@ -14,7 +14,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
 		if (!parsed) throw new Error("Body was not in correct format.");
 
-		const cached = cache.get(event.headers["uuid"]);
+		const cached = get(event.headers["uuid"]);
 
 		if (!cached) throw new Error("No cache found.");
 
@@ -27,9 +27,10 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 			};
 		}
 
+		// Answer was correct!
 		return {
 			statusCode: 200,
-			body: JSON.stringify({}),
+			body: JSON.stringify({}), // Probably doesn't need a body other than the 200 code.
 		};
 	} catch (error) {
 		console.log("[answer-handler] " + error);

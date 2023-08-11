@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import cache from "memory-cache";
+import { put } from "memory-cache";
 import { nanoid } from "nanoid";
 import { ERRORS } from "../constants";
 import {
@@ -38,7 +38,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
 		const uuid = nanoid();
 
-		cache.put(uuid, correctAnswer);
+		put(uuid, correctAnswer); // Put the answer into the cache.
 
 		return {
 			statusCode: 200,
