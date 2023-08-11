@@ -1,28 +1,33 @@
 // User should be able to answer here.
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { get } from "memory-cache";
 import { ERRORS } from "../constants";
 import { PostAnswerEventType } from "../types";
+import { checkAnswer } from "../utils/answer";
+import { fetchCountriesWithCapitals } from "../utils/countries";
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
 	try {
 		if (!event.body) throw new Error("No body parsed.");
 
-		if (!event.headers["uuid"]) throw new Error("No UUID associated.");
-
 		const parsed: PostAnswerEventType = JSON.parse(event.body);
 
 		if (!parsed) throw new Error("Body was not in correct format.");
 
-		const cached = get(event.headers["uuid"]);
+		const data = await fetchCountriesWithCapitals();
 
-		if (!cached) throw new Error("No cache found.");
+		const answerStatus = await checkAnswer(parsed, data);
 
-		if (cached !== parsed.answer) {
+		if (!answerStatus) throw new Error("Countries data incorrect");
+
+		if (!answerStatus.isCorrect) {
+			console.log(
+				`[answer-handler]: Answer: ${parsed.answer} is not correct! Correct: ${answerStatus.correct}`
+			);
 			return {
 				statusCode: 400,
 				body: JSON.stringify({
-					correct: cached,
+					correctAnswer: answerStatus.correct,
+					correct: false, // used to show that the answer is incorrect!
 				}),
 			};
 		}
@@ -30,7 +35,9 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 		// Answer was correct!
 		return {
 			statusCode: 200,
-			body: JSON.stringify({}), // Probably doesn't need a body other than the 200 code.
+			body: JSON.stringify({
+				correct: true, // used to show that the answer is incorrect!
+			}),
 		};
 	} catch (error) {
 		console.log("[answer-handler] " + error);

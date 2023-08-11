@@ -31,10 +31,7 @@ To run the workspaces together:
 
 ## Future considerations
 
-- Consider using caching services like Redis caching for production environments. Currently only using a local solution.
+- Consider using caching services like Redis caching for production environments.
 -
 
 ## Packages currently in use
-
-- Nanoid for URL safe UUID generation.
-- memory-cache to provide a solution for caching a user's answer by their UUID.

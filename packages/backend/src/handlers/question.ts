@@ -1,12 +1,12 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { put } from "memory-cache";
-import { nanoid } from "nanoid";
+import { v4 as uuidv4 } from "uuid";
 import { ERRORS } from "../constants";
 import {
 	fetchCountriesWithCapitals,
 	format,
 	generateQuizOptions,
 } from "../utils";
+import cache from "../utils/cache";
 
 /**
  * Gathers data from the countries endpoint.
@@ -36,9 +36,9 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
 		const [correctAnswer] = options; // Get the correct answer from the getCountryAnswers call. (ALWAYS first)
 
-		const uuid = nanoid();
+		const uuid = uuidv4();
 
-		put(uuid, correctAnswer); // Put the answer into the cache.
+		cache.put(uuid, correctAnswer); // Put the answer into the cache.
 
 		return {
 			statusCode: 200,
