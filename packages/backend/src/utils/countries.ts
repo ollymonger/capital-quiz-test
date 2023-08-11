@@ -1,26 +1,29 @@
 import { Country, GetCountriesResponseType, SelectedCountry } from "../types";
 
+/**
+ * Fetches the countries from the countries API and filters out any without capital cities.
+ */
 export const fetchCountriesWithCapitals = async (): Promise<
-  Country[] | null
+	Country[] | null
 > => {
-  try {
-    const res = await fetch(
-      "https://countriesnow.space/api/v0.1/countries/capital"
-    );
+	try {
+		const res = await fetch(
+			"https://countriesnow.space/api/v0.1/countries/capital"
+		);
 
-    const parsed: GetCountriesResponseType = await res.json();
+		const parsed: GetCountriesResponseType = await res.json();
 
-    const { error, data, msg } = parsed;
+		const { error, data, msg } = parsed;
 
-    if (error && !data) {
-      throw new Error(msg);
-    }
+		if (error && !data) {
+			throw new Error(msg);
+		}
 
-    return data.filter((country) => country.capital); // Ensure that countries have capitals.
-  } catch (error) {
-    console.log("[fetchCountriesWithCapitals] " + error);
-    return null;
-  }
+		return data.filter((country) => country.capital); // Ensure that countries have capitals.
+	} catch (error) {
+		console.log("[fetchCountriesWithCapitals] " + error);
+		return null;
+	}
 };
 
 /**
@@ -30,49 +33,69 @@ export const fetchCountriesWithCapitals = async (): Promise<
  */
 
 export const generateQuizOptions = (
-  data: Country[]
+	data: Country[]
 ): SelectedCountry[] | undefined => {
-  if (data.length === 0) {
-    // No data, something went wrong.
-    return undefined;
-  }
+	if (data.length === 0) {
+		// No data, something went wrong.
+		return undefined;
+	}
 
-  const countries: SelectedCountry[] = [];
+	const countries: SelectedCountry[] = [];
 
-  const selectedIndex = Math.floor(Math.random() * data.length); // Pick a random index based of off data length.
+	const selectedIndex = Math.floor(Math.random() * data.length); // Pick a random index based of off data length.
 
-  if (!data[selectedIndex].capital) {
-    console.log(
-      `[generateQuizOptions] Country ${data[selectedIndex].capital} does not have a capital. Skipping.`
-    );
-    return undefined;
-  }
+	if (!data[selectedIndex].capital) {
+		console.log(
+			`[generateQuizOptions] Country ${data[selectedIndex].capital} does not have a capital. Skipping.`
+		);
+		return undefined;
+	}
 
-  const chosen: SelectedCountry = {
-    country: data[selectedIndex].name,
-    capital: data[selectedIndex].capital,
-  };
+	const chosen: SelectedCountry = {
+		country: data[selectedIndex].name,
+		capital: data[selectedIndex].capital,
+	};
 
-  countries.push(chosen);
+	countries.push(chosen);
 
-  for (let i = 0; i < 2; i++) {
-    let incorrectIndex = Math.floor(Math.random() * data.length);
+	const incorrectOptions = generateIncorrectOptions(selectedIndex, data);
 
-    do {
-      // This is to always ensure that the correct answer does not appear twice.
-      console.log(
-        "[generateQuizOptions] incorrectIndex is the same as selectedIndex! Reselecting an incorrect answer!"
-      );
-      incorrectIndex = Math.floor(Math.random() * data.length);
-    } while (incorrectIndex === selectedIndex);
+	countries.push(...incorrectOptions);
 
-    const incorrect: SelectedCountry = {
-      country: data[incorrectIndex].name,
-      capital: data[incorrectIndex].capital,
-    };
-
-    countries.push(incorrect);
-  }
-
-  return countries;
+	return countries;
 };
+
+/**
+ * Generates the incorrect options for the answers array.
+ * Requires: to be used with the ... spread operator.
+ * @returns SelectedCountry[]
+ */
+export function generateIncorrectOptions(
+	selectedIndex: number,
+	data: Country[]
+): SelectedCountry[] {
+	const incorrectOptions: SelectedCountry[] = [];
+
+	for (let i = 0; i < 2; i++) {
+		let otherOptionsIndex; // Does not need to be initialized here, as gets initialized within the do while
+
+		do {
+			otherOptionsIndex = Math.floor(Math.random() * data.length);
+			if (otherOptionsIndex === selectedIndex) {
+				// Prints only if the above is the same as the selectedIndex.
+				console.log(
+					"[generateQuizOptions] incorrectIndex is the same as selectedIndex! Reselecting an incorrect answer!"
+				);
+			}
+		} while (otherOptionsIndex === selectedIndex);
+
+		const incorrectOption: SelectedCountry = {
+			country: data[otherOptionsIndex].name,
+			capital: data[otherOptionsIndex].capital,
+		};
+
+		incorrectOptions.push(incorrectOption);
+	}
+
+	return incorrectOptions;
+}

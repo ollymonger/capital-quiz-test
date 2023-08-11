@@ -1,10 +1,12 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
+import cache from "memory-cache";
+import { nanoid } from "nanoid";
 import { ERRORS } from "../constants";
 import {
-  fetchCountriesWithCapitals,
-  generateQuizOptions,
-} from "../utils/countries";
-import { format } from "../utils/format";
+	fetchCountriesWithCapitals,
+	format,
+	generateQuizOptions,
+} from "../utils";
 
 /**
  * Gathers data from the countries endpoint.
@@ -16,39 +18,44 @@ import { format } from "../utils/format";
  * }}
  */
 export const handler: APIGatewayProxyHandler = async (event, context) => {
-  try {
-    const countries = await fetchCountriesWithCapitals();
+	try {
+		const countries = await fetchCountriesWithCapitals();
 
-    if (!countries) {
-      throw new Error(ERRORS.COUNTRIES_NOT_FOUND);
-    }
+		if (!countries) {
+			throw new Error(ERRORS.COUNTRIES_NOT_FOUND);
+		}
 
-    const options = generateQuizOptions(countries); // Get the answers array
+		const options = generateQuizOptions(countries); // Get the answers array
 
-    if (!options) {
-      console.log(
-        "[question-handler] Something went wrong gathering the answers!"
-      );
-      throw new Error(ERRORS.OPTIONS_FAILED_TO_GENERATE);
-    }
+		if (!options) {
+			console.log(
+				"[question-handler] Something went wrong gathering the answers!"
+			);
+			throw new Error(ERRORS.OPTIONS_FAILED_TO_GENERATE);
+		}
 
-    const [correctAnswer] = options; // Get the correct answer from the getCountryAnswers call. (ALWAYS first)
+		const [correctAnswer] = options; // Get the correct answer from the getCountryAnswers call. (ALWAYS first)
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        selected: correctAnswer.country,
-        options: format(options), // Shuffle, and only return the capitals
-      }),
-    };
-  } catch (error) {
-    console.log("[question-handler] " + error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        message: ERRORS.GENERIC_ERROR_MESSAGE,
-        error: error,
-      }),
-    };
-  }
+		const uuid = nanoid();
+
+		cache.put(uuid, correctAnswer);
+
+		return {
+			statusCode: 200,
+			body: JSON.stringify({
+				selected: correctAnswer.country,
+				options: format(options), // Shuffle, and only return the capitals
+				uuid: uuid, // answer.ts will query this to ensure that it does not recall the endpoint.
+			}),
+		};
+	} catch (error) {
+		console.log("[question-handler] " + error);
+		return {
+			statusCode: 500,
+			body: JSON.stringify({
+				message: ERRORS.GENERIC_ERROR_MESSAGE,
+				error: error,
+			}),
+		};
+	}
 };
