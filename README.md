@@ -31,7 +31,7 @@ To run the workspaces together:
 
 ## Future considerations
 
-- Consider using caching services like Redis caching for production environments.
+- Consider using caching services like Redis caching for production environments. Initially, I went with a memory-cache route but as we're using serverless for the backend this is not feasible.
 -
 
 ## Packages currently in use
