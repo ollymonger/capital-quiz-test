@@ -1,12 +1,10 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { v4 as uuidv4 } from "uuid";
 import { ERRORS } from "../constants";
 import {
 	fetchCountriesWithCapitals,
 	format,
 	generateQuizOptions,
 } from "../utils";
-import cache from "../utils/cache";
 
 /**
  * Gathers data from the countries endpoint.
@@ -36,16 +34,11 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
 		const [correctAnswer] = options; // Get the correct answer from the getCountryAnswers call. (ALWAYS first)
 
-		const uuid = uuidv4();
-
-		cache.put(uuid, correctAnswer); // Put the answer into the cache.
-
 		return {
 			statusCode: 200,
 			body: JSON.stringify({
 				selected: correctAnswer.country,
 				options: format(options), // Shuffle, and only return the capitals
-				uuid: uuid, // answer.ts will query this to ensure that it does not recall the endpoint.
 			}),
 		};
 	} catch (error) {
