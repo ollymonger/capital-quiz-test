@@ -1,4 +1,4 @@
-import { getCountriesData, getCountryAnswers } from "./countries";
+import { fetchCountriesWithCapitals, generateQuizOptions } from "./countries";
 import { format } from "./format";
 
-export { format, getCountriesData, getCountryAnswers };
+export { fetchCountriesWithCapitals, format, generateQuizOptions };

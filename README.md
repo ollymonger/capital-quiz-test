@@ -29,6 +29,9 @@ To run the workspaces together:
 - Responsive UI
 - Should continue till the user chooses to exit the application.
 
-```
+## Future considerations
 
-```
+- Consider using caching services like Redis caching for production environments. Initially, I went with a memory-cache route but as we're using serverless for the backend this is not feasible.
+-
+
+## Packages currently in use

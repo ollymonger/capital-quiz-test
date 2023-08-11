@@ -6,19 +6,19 @@ provider:
   runtime: nodejs18.x
 
 functions:
-  status:
-    handler: src/handlers/status.handler
-    events:
-      - httpApi:
-          path: /
-          method: get
-
   question:
     handler: src/handlers/question.handler
     events:
       - httpApi:
           path: /get/question
           method: get
+
+  answer:
+    handler: src/handlers/answer.handler
+    events:
+      - httpApi:
+          path: /post/answer
+          method: post
 
 custom:
   serverless-offline:
