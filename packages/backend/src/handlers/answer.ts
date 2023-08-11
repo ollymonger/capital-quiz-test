@@ -11,13 +11,13 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
 		const parsed: PostAnswerEventType = JSON.parse(event.body);
 
-		if (!parsed) throw new Error("Body was not in correct format.");
+		if (!parsed) throw new Error(ERRORS.ANSWERS_BODY_INCORRECT_FORMAT);
 
 		const data = await fetchCountriesWithCapitals();
 
 		const answerStatus = await checkAnswer(parsed, data);
 
-		if (!answerStatus) throw new Error("Countries data incorrect");
+		if (!answerStatus) throw new Error(ERRORS.COUNTRIES_DATA_MALFORMED);
 
 		if (!answerStatus.isCorrect) {
 			console.log(
