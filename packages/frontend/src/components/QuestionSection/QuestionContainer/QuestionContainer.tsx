@@ -62,7 +62,7 @@ export function QuestionContainer() {
 						<FlagHolder flagUrl="test" />
 					</Grid>
 					<Grid item xs={2} sx={{ paddingTop: "1em" }}>
-						<Typography variant="h5">
+						<Typography variant="h5" sx={{ color: "whitesmoke" }}>
 							{quizContext.currentQuestion.selected}
 						</Typography>
 					</Grid>
@@ -77,7 +77,11 @@ export function QuestionContainer() {
 					<Grid
 						item
 						xs={2}
-						sx={{ display: "flex", width: "100%", justifyContent: "center" }}
+						sx={{
+							display: "flex",
+							width: "100%",
+							justifyContent: "center",
+						}}
 					>
 						<OptionsButtonsContainer />
 					</Grid>

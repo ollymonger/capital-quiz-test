@@ -54,6 +54,14 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 			if (res) {
 				setAwaitingAnswer(true);
 				setAnswerResponse(res);
+				if (res.correct) {
+					// plus one point for incorrect answers
+
+					setScore(score + 1);
+				} else {
+					// minus one point for incorrect answers
+					setScore(score - 1);
+				}
 			}
 			return res;
 		} catch (error) {
