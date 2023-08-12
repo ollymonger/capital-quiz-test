@@ -1,7 +1,12 @@
 import { Button, Container, Typography } from "@mui/material";
 import React from "react";
+import { useQuizContext } from "../context/context";
 
 export function Header() {
+	const quizContext = useQuizContext();
+
+	if (!quizContext) return;
+
 	return (
 		<Container
 			sx={{
@@ -27,7 +32,9 @@ export function Header() {
 					justifyContent: "center",
 				}}
 			>
-				<Button variant="contained">Restart</Button>
+				<Button variant="contained" onClick={() => quizContext?.nextQuestion()}>
+					Restart
+				</Button>
 			</div>
 		</Container>
 	);
