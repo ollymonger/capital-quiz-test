@@ -11,23 +11,30 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
 		const parsed: PostAnswerEventType = JSON.parse(event.body);
 
+		console.log(parsed);
+
 		if (!parsed) throw new Error(ERRORS.ANSWERS_BODY_INCORRECT_FORMAT);
 
 		const data = await fetchCountriesWithCapitals();
 
+		if (!data) throw new Error(ERRORS.COUNTRIES_DATA_MALFORMED);
+
 		const answerStatus = await checkAnswer(parsed, data);
 
-		if (!answerStatus) throw new Error(ERRORS.COUNTRIES_DATA_MALFORMED);
+		if (!answerStatus) {
+			throw new Error("Something went wrong!");
+		}
 
 		if (!answerStatus.isCorrect) {
 			console.log(
 				`[answer-handler]: Answer: ${parsed.answer} is not correct! Correct: ${answerStatus.correct}`
 			);
 			return {
-				statusCode: 400,
+				statusCode: 200,
 				body: JSON.stringify({
 					correctAnswer: answerStatus.correct,
 					correct: false, // used to show that the answer is incorrect!
+					country: parsed.country,
 				}),
 			};
 		}
@@ -36,7 +43,9 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 		return {
 			statusCode: 200,
 			body: JSON.stringify({
-				correct: true, // used to show that the answer is incorrect!
+				correct: true,
+				correctAnswer: answerStatus.correct,
+				country: parsed.country,
 			}),
 		};
 	} catch (error) {

@@ -1,6 +1,6 @@
 import React from "react";
-import { Layout } from "./components/Layout/Layout";
-import { QuestionContainer } from "./components/QuestionSection/QuestionContainer/QuestionContainer";
+import { Layout, QuestionContainer } from "./components";
+
 export function App() {
 	return (
 		<Layout>

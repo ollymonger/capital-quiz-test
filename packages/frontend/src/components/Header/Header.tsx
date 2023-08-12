@@ -1,12 +1,8 @@
-import { Button, Container, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import React from "react";
-import { useQuizContext } from "../context/context";
+import { SideButton } from "./SideButton";
 
 export function Header() {
-	const quizContext = useQuizContext();
-
-	if (!quizContext) return;
-
 	return (
 		<Container
 			sx={{
@@ -19,23 +15,13 @@ export function Header() {
 		>
 			<div
 				style={{
-					flex: "75%",
+					flex: "70%",
 				}}
 			>
 				<Typography variant="h5">Capital Quiz</Typography>
 			</div>
 
-			<div
-				style={{
-					flex: "25%",
-					display: "flex",
-					justifyContent: "center",
-				}}
-			>
-				<Button variant="contained" onClick={() => quizContext?.nextQuestion()}>
-					Restart
-				</Button>
-			</div>
+			<SideButton />
 		</Container>
 	);
 }

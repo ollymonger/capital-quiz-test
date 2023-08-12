@@ -1,8 +1,8 @@
 import { Grid } from "@mui/material";
 import React, { useState } from "react";
 import { useIsDesktop } from "../../hooks";
-import { useFetchQuestion } from "../../hooks/useFetchQuestion/useFetchQuestion";
-import { FetchQuestionResult } from "../../types/FetchQuestionResult";
+import { FetchQuestionResult, PostAnswerResult } from "../../types";
+import { fetchQuestion, postAnswer } from "../../utils";
 import { Header } from "../Header/Header";
 import { QuizContext } from "../context/context";
 import { LayoutContainer, LayoutGrid } from "./styles";
@@ -11,6 +11,8 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 	const isDesktop = useIsDesktop();
 
 	const [loading, setLoading] = useState<boolean>(true);
+	const [awaitingAnswer, setAwaitingAnswer] = useState<boolean>(false);
+	const [score, setScore] = useState<number>(0);
 
 	const [currentQuestion, setCurrentQuestion] =
 		useState<FetchQuestionResult | null>({
@@ -18,17 +20,44 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 			options: null,
 		});
 
+	const [answerResponse, setAnswerResponse] = useState<PostAnswerResult | null>(
+		null
+	);
+
 	const nextQuestionAsync = async () => {
 		try {
 			setLoading(true);
-			const question = await useFetchQuestion(); // Call the new function
+			const question = await fetchQuestion(); // Call the new function
 			if (question) {
 				setLoading(false);
+				setAnswerResponse(null);
 				setCurrentQuestion(question);
 			}
 			return question;
 		} catch (error) {
 			console.error("Error fetching next question:", error);
+			return null;
+		}
+	};
+
+	const answerAsync = async (answer: string) => {
+		try {
+			setAwaitingAnswer(false);
+			if (!currentQuestion) {
+				return null;
+			}
+			const res = await postAnswer({
+				answer,
+				question: currentQuestion.selected,
+			}); // Call the new function
+
+			if (res) {
+				setAwaitingAnswer(true);
+				setAnswerResponse(res);
+			}
+			return res;
+		} catch (error) {
+			console.log(error);
 			return null;
 		}
 	};
@@ -46,9 +75,15 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 					loading: loading,
 					setLoading: (loading) => setLoading(loading),
 					nextQuestion: nextQuestionAsync,
-					answerQuestion: (answer) => console.log(answer),
+					answerQuestion: async (answer) => answerAsync(answer),
+					awaitingAnswer: awaitingAnswer,
+					setAwaitingAnswer: setAwaitingAnswer,
+					answerResponse: answerResponse,
+					updateAnswerResponse: (answer) => setAnswerResponse(answer),
 					currentQuestion: currentQuestion,
 					updateCurrentQuestion: setCurrentQuestion,
+					score,
+					incrementScore: () => setScore(score + 1),
 				}}
 			>
 				<LayoutGrid container direction="column" spacing={!isDesktop ? 0 : 1}>

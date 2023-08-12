@@ -1,10 +1,11 @@
 import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useIsDesktop } from "../../../hooks";
-import { useFetchQuestion } from "../../../hooks/useFetchQuestion/useFetchQuestion";
+import { fetchQuestion } from "../../../utils";
 import { useQuizContext } from "../../context/context";
+import { AnswerResultContainer } from "../AnswerResultContainer";
 import { FlagHolder } from "../FlagHolder/FlagHolder";
-import { OptionButton } from "../OptionButton/OptionButton";
+import { OptionsButtonsContainer } from "../OptionButton";
 
 export function QuestionContainer() {
 	const isDesktop = useIsDesktop();
@@ -14,14 +15,16 @@ export function QuestionContainer() {
 
 	useEffect(() => {
 		const fetchAndSetQuestion = async () => {
-			const nextQuestion = await useFetchQuestion();
+			const nextQuestion = await fetchQuestion();
 			if (nextQuestion) {
 				await quizContext.updateCurrentQuestion(nextQuestion);
 				await quizContext.setLoading(false);
+				// Stops loading and shows the Country
 			}
 		};
 
 		fetchAndSetQuestion();
+		// This gets called on load so that the user will get a question.
 	}, []);
 
 	return (
@@ -47,7 +50,9 @@ export function QuestionContainer() {
 					}}
 				>
 					<Grid item xs={1}>
-						<Typography variant="h5">Can you guess the capital of:</Typography>
+						<Typography variant="h5" sx={{ color: "whitesmoke" }}>
+							Can you guess the capital of:
+						</Typography>
 					</Grid>
 					<Grid
 						item
@@ -56,21 +61,25 @@ export function QuestionContainer() {
 					>
 						<FlagHolder flagUrl="test" />
 					</Grid>
-					<Grid item xs={1} />
-					<Grid item xs={2}>
-						<Typography variant="h6">
+					<Grid item xs={2} sx={{ paddingTop: "1em" }}>
+						<Typography variant="h5">
 							{quizContext.currentQuestion.selected}
 						</Typography>
 					</Grid>
-					<Grid item xs={2}></Grid>
+					<Grid
+						item
+						xs={3}
+						sx={{ display: "flex", width: isDesktop ? "45%" : "65%" }}
+					>
+						<AnswerResultContainer />
+					</Grid>
+					<Grid item xs={1} />
 					<Grid
 						item
 						xs={2}
 						sx={{ display: "flex", width: "100%", justifyContent: "center" }}
 					>
-						{quizContext.currentQuestion.options.map((item) => (
-							<OptionButton title={item.capital} key={item.capital} />
-						))}
+						<OptionsButtonsContainer />
 					</Grid>
 				</Grid>
 			) : (
