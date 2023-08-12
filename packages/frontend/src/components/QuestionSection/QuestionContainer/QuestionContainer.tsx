@@ -1,11 +1,13 @@
 import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import React, { useEffect } from "react";
+import { useIsDesktop } from "../../../hooks";
 import { useFetchQuestion } from "../../../hooks/useFetchQuestion/useFetchQuestion";
 import { useQuizContext } from "../../context/context";
 import { FlagHolder } from "../FlagHolder/FlagHolder";
 import { OptionButton } from "../OptionButton/OptionButton";
 
 export function QuestionContainer() {
+	const isDesktop = useIsDesktop();
 	const quizContext = useQuizContext();
 
 	if (!quizContext) return;
@@ -47,7 +49,11 @@ export function QuestionContainer() {
 					<Grid item xs={1}>
 						<Typography variant="h5">Can you guess the capital of:</Typography>
 					</Grid>
-					<Grid item xs={3} sx={{ display: "flex", width: "35%" }}>
+					<Grid
+						item
+						xs={3}
+						sx={{ display: "flex", width: isDesktop ? "35%" : "65%" }}
+					>
 						<FlagHolder flagUrl="test" />
 					</Grid>
 					<Grid item xs={1} />
