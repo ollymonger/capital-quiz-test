@@ -4,11 +4,17 @@ export async function checkAnswer(
 	answer: PostAnswerEventType,
 	data: Country[] | null
 ) {
-	if (!data) return null;
+	if (!data) {
+		console.log("no data");
+		return null;
+	}
 
 	const countryObject = data.find((country) => country.name === answer.country);
 
-	if (!countryObject) return null;
+	if (!countryObject) {
+		console.log("no country obj");
+		return null;
+	}
 
 	if (countryObject.capital != answer.answer) {
 		// Capital was incorrect.

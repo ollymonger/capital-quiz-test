@@ -36,3 +36,5 @@ To run the workspaces together:
 -
 
 ## Packages currently in use
+
+- Material UI - for efficiency and ease setting up frontend environment.
