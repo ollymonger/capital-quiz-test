@@ -7,8 +7,4 @@ const container = document.getElementById("app");
 const root = ReactDOM.createRoot(container!);
 
 // React version 18 Strict Mode causes re-rendering in development builds.
-root.render(
-	<React.StrictMode>
-		<App />
-	</React.StrictMode>
-);
+root.render(<App />);
