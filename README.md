@@ -28,11 +28,15 @@ To run the workspaces together:
 - A button to restart
 - Responsive UI
 - Should continue till the user chooses to exit the application.
+- FE network tab must never see the correct answer until the user has answered for security reasons.
 
 ## Future considerations
 
 - Consider using caching services like Redis caching for production environments. Initially, I went with a memory-cache route but as we're using serverless for the backend this is not feasible.
--
+- Consider using React Redux on the frontend, along with a in-browser caching lib to keep "score" data across sessions.
+- Update styling to use individual StyledComponents (where appropriate) (or use exposed styling files. SX is appropriate according to MUI v5 documentation)
+- Update FE colour schemes to look a bit nicer.
+- Add some more random facts.
 
 ## Packages currently in use
 
