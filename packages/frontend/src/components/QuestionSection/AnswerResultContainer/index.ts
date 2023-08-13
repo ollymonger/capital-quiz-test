@@ -1,3 +1,3 @@
-import { AnswerResultContainer } from "./AnswerResultContainer";
+import { AnswerResultContainer } from './AnswerResultContainer';
 
 export { AnswerResultContainer };

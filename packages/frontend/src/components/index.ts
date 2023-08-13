@@ -1,4 +1,4 @@
-import { Layout } from "./Layout/Layout";
-import { QuestionContainer } from "./QuestionSection";
+import { Layout } from './Layout/Layout';
+import { QuestionContainer } from './QuestionSection';
 
 export { Layout, QuestionContainer };

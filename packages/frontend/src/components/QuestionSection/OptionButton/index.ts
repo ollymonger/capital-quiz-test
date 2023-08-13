@@ -1,3 +1,3 @@
-import { OptionsButtonsContainer } from "./OptionButtonsContainer";
+import { OptionsButtonsContainer } from './OptionButtonsContainer';
 
 export { OptionsButtonsContainer };
