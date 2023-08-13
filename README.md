@@ -17,10 +17,6 @@ To run the workspaces individually:
 - `yarn backend:start` - to start the backend.
 - `yarn frontend:start` - to start the frontend.
 
-To run the workspaces together:
-
-- `yarn start` - starts frontend and backend.
-
 ## Project aims
 
 - Application made to aid users in learning capital cities around the world.
