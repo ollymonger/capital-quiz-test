@@ -41,3 +41,7 @@ To run the workspaces individually:
 
 - Material UI - for efficiency and ease setting up frontend environment.
 - Notistack's Snackbar - for ease of use to display errors.
+
+### FE initial designs page.
+After completing the BE tasks, I swiftly moved onto drawing and designing the FE. see below for an initial design.
+![WhatsApp_Image_2023-08-11_at_15 36 41](https://github.com/ollymonger/capital-quiz-test/assets/47275398/4d44e5e4-82cd-4433-84ae-d49c86ddfd64)
