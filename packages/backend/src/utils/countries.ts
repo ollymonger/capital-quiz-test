@@ -1,29 +1,22 @@
-import { Country, GetCountriesResponseType, SelectedCountry } from "../types";
+import axios from 'axios';
+import { Country, GetCountriesResponseType, SelectedCountry } from '../types';
 
 /**
  * Fetches the countries from the countries API and filters out any without capital cities.
  */
-export const fetchCountriesWithCapitals = async (): Promise<
-	Country[] | null
-> => {
-	try {
-		const res = await fetch(
-			"https://countriesnow.space/api/v0.1/countries/capital"
-		);
+export const fetchCountriesWithCapitals = async (): Promise<Country[] | null> => {
+  try {
+    const res = await axios.get('https://countriesnow.space/api/v0.1/countries/capital');
 
-		const parsed: GetCountriesResponseType = await res.json();
+    const { data } = res;
 
-		const { error, data, msg } = parsed;
+    const parsed: GetCountriesResponseType = data;
 
-		if (error && !data) {
-			throw new Error(msg);
-		}
-
-		return data.filter((country) => country.capital); // Ensure that countries have capitals.
-	} catch (error) {
-		console.log("[fetchCountriesWithCapitals] " + error);
-		return null;
-	}
+    return parsed.data.filter((country) => country.capital); // Ensure that countries have capitals.
+  } catch (error) {
+    console.log('[fetchCountriesWithCapitals] ' + error);
+    return null;
+  }
 };
 
 /**
@@ -32,37 +25,33 @@ export const fetchCountriesWithCapitals = async (): Promise<
  * @returns An array of SelectedCountry representing the quiz answers, or undefined if data is empty.
  */
 
-export const generateQuizOptions = (
-	data: Country[]
-): SelectedCountry[] | undefined => {
-	if (data.length === 0) {
-		// No data, something went wrong.
-		return undefined;
-	}
+export const generateQuizOptions = (data: Country[]): SelectedCountry[] | undefined => {
+  if (data.length === 0) {
+    // No data, something went wrong.
+    return undefined;
+  }
 
-	const countries: SelectedCountry[] = [];
+  const countries: SelectedCountry[] = [];
 
-	const selectedIndex = Math.floor(Math.random() * data.length); // Pick a random index based of off data length.
+  const selectedIndex = Math.floor(Math.random() * data.length); // Pick a random index based of off data length.
 
-	if (!data[selectedIndex].capital) {
-		console.log(
-			`[generateQuizOptions] Country ${data[selectedIndex].capital} does not have a capital. Skipping.`
-		);
-		return undefined;
-	}
+  if (!data[selectedIndex].capital) {
+    console.log(`[generateQuizOptions] Country ${data[selectedIndex].capital} does not have a capital. Skipping.`);
+    return undefined;
+  }
 
-	const chosen: SelectedCountry = {
-		country: data[selectedIndex].name,
-		capital: data[selectedIndex].capital,
-	};
+  const chosen: SelectedCountry = {
+    country: data[selectedIndex].name,
+    capital: data[selectedIndex].capital,
+  };
 
-	countries.push(chosen);
+  countries.push(chosen);
 
-	const incorrectOptions = generateIncorrectOptions(selectedIndex, data);
+  const incorrectOptions = generateIncorrectOptions(selectedIndex, data);
 
-	countries.push(...incorrectOptions);
+  countries.push(...incorrectOptions);
 
-	return countries;
+  return countries;
 };
 
 /**
@@ -70,32 +59,29 @@ export const generateQuizOptions = (
  * Requires: to be used with the ... spread operator.
  * @returns SelectedCountry[]
  */
-export function generateIncorrectOptions(
-	selectedIndex: number,
-	data: Country[]
-): SelectedCountry[] {
-	const incorrectOptions: SelectedCountry[] = [];
+export function generateIncorrectOptions(selectedIndex: number, data: Country[]): SelectedCountry[] {
+  const incorrectOptions: SelectedCountry[] = [];
 
-	for (let i = 0; i < 2; i++) {
-		let otherOptionsIndex; // Does not need to be initialized here, as gets initialized within the do while
+  for (let i = 0; i < 2; i++) {
+    let otherOptionsIndex; // Does not need to be initialized here, as gets initialized within the do while
 
-		do {
-			otherOptionsIndex = Math.floor(Math.random() * data.length);
-			if (otherOptionsIndex === selectedIndex) {
-				// Prints only if the above is the same as the selectedIndex.
-				console.log(
-					"[generateQuizOptions] incorrectIndex is the same as selectedIndex! Reselecting an incorrect answer!"
-				);
-			}
-		} while (otherOptionsIndex === selectedIndex);
+    do {
+      otherOptionsIndex = Math.floor(Math.random() * data.length);
+      if (otherOptionsIndex === selectedIndex) {
+        // Prints only if the above is the same as the selectedIndex.
+        console.log(
+          '[generateQuizOptions] incorrectIndex is the same as selectedIndex! Reselecting an incorrect answer!'
+        );
+      }
+    } while (otherOptionsIndex === selectedIndex);
 
-		const incorrectOption: SelectedCountry = {
-			country: data[otherOptionsIndex].name,
-			capital: data[otherOptionsIndex].capital,
-		};
+    const incorrectOption: SelectedCountry = {
+      country: data[otherOptionsIndex].name,
+      capital: data[otherOptionsIndex].capital,
+    };
 
-		incorrectOptions.push(incorrectOption);
-	}
+    incorrectOptions.push(incorrectOption);
+  }
 
-	return incorrectOptions;
+  return incorrectOptions;
 }
