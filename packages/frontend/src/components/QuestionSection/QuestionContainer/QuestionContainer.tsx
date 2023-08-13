@@ -1,4 +1,5 @@
 import { CircularProgress, Container, Grid, Typography } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import { useIsDesktop } from '../../../hooks';
 import { fetchQuestion } from '../../../utils';
@@ -20,7 +21,13 @@ export function QuestionContainer() {
         await quizContext.updateCurrentQuestion(nextQuestion);
         await quizContext.setLoading(false);
         // Stops loading and shows the Country
+        return;
       }
+
+      enqueueSnackbar({
+        message: 'Error fetching question data!',
+        variant: 'error',
+      }); // Providers a small error toast. If something goes wrong.
     };
 
     fetchAndSetQuestion();

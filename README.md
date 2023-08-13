@@ -38,7 +38,9 @@ To run the workspaces together:
 - Update FE colour schemes to look a bit nicer.
 - Add some more random facts.
 - If more time, add some unit tests for both backend and frontend.
+- Would be nice to have an individual page/display if something went wrong, in addition to the snackbar elements.
 
 ## Packages currently in use
 
 - Material UI - for efficiency and ease setting up frontend environment.
+- Notistack's Snackbar - for ease of use to display errors.
