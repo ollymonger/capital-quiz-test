@@ -1,28 +1,21 @@
-import { Button } from "@mui/material";
-import React from "react";
-import { useQuizContext } from "../../context/context";
+import { Button } from '@mui/material';
+import React from 'react';
+import { useQuizContext } from '../../context/context';
 
-export function OptionButton({
-	title,
-	disabled,
-}: {
-	title: string;
-	disabled: boolean;
-}) {
-	const quizContext = useQuizContext();
+export function OptionButton({ title, disabled }: { title: string; disabled: boolean }) {
+  const quizContext = useQuizContext();
 
-	if (!quizContext) return;
+  if (!quizContext) return;
 
-	return (
-		<Button
-			fullWidth
-			onClick={() => quizContext.answerQuestion(title)}
-			disabled={disabled}
-			variant="outlined"
-			color="secondary"
-			sx={{ color: "whitesmoke" }}
-		>
-			{title}
-		</Button>
-	);
+  return (
+    <Button
+      fullWidth
+      onClick={() => quizContext.answerQuestion(title)}
+      disabled={disabled}
+      variant="outlined"
+      color="secondary"
+      sx={{ color: 'whitesmoke' }}>
+      {title}
+    </Button>
+  );
 }

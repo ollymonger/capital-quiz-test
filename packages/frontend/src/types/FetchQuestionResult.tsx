@@ -1,8 +1,8 @@
 export type FetchQuestionResult = {
-	selected: string | null;
-	options: Option[] | null;
+  selected: string | null;
+  options: Option[] | null;
 };
 
 type Option = {
-	capital: string;
+  capital: string;
 };

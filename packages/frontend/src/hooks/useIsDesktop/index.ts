@@ -1,3 +1,3 @@
-import { useIsDesktop } from "./useIsDesktop";
+import { useIsDesktop } from './useIsDesktop';
 
 export { useIsDesktop };

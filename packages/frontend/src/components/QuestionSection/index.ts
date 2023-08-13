@@ -1,3 +1,3 @@
-import { QuestionContainer } from "./QuestionContainer/QuestionContainer";
+import { QuestionContainer } from './QuestionContainer/QuestionContainer';
 
 export { QuestionContainer };
