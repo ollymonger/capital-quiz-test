@@ -12,6 +12,10 @@ export const fetchCountriesWithCapitals = async (): Promise<Country[] | null> =>
 
     const parsed: GetCountriesResponseType = data;
 
+    if (parsed.error && parsed.msg) {
+      throw new Error(parsed.msg);
+    }
+
     return parsed.data.filter((country) => country.capital); // Ensure that countries have capitals.
   } catch (error) {
     console.log('[fetchCountriesWithCapitals] ' + error);
