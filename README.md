@@ -42,3 +42,4 @@ To run the workspaces together:
 ## Packages currently in use
 
 - Material UI - for efficiency and ease setting up frontend environment.
+- Notistack's Snackbar - for ease of use to display errors.
