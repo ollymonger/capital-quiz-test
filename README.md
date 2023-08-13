@@ -39,6 +39,7 @@ To run the workspaces together:
 - Add some more random facts.
 - If more time, add some unit tests for both backend and frontend.
 - Would be nice to have an individual page/display if something went wrong, in addition to the snackbar elements.
+- Consider having a backend API route of which is used to determine whether the backend is accessible? - This way, I could've ensured that no "loading" spinners are consatntly spinning on load if the backend route is not available?
 
 ## Packages currently in use
 
