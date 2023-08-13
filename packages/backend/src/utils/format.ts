@@ -1,4 +1,4 @@
-import { Capital, SelectedCountry } from "../types";
+import { Capital, SelectedCountry } from '../types';
 
 /**
  * Shuffles the elements of an array using the Fisher-Yates shuffle algorithm.

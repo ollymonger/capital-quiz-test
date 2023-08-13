@@ -1,4 +1,4 @@
-import { Country } from "./country.types";
+import { Country } from './country.types';
 
 export type GetCountriesResponseType = {
   error: boolean;

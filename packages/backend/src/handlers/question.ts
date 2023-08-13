@@ -1,10 +1,6 @@
-import { APIGatewayProxyHandler } from "aws-lambda";
-import { ERRORS } from "../constants";
-import {
-	fetchCountriesWithCapitals,
-	format,
-	generateQuizOptions,
-} from "../utils";
+import { APIGatewayProxyHandler } from 'aws-lambda';
+import { ERRORS } from '../constants';
+import { fetchCountriesWithCapitals, format, generateQuizOptions } from '../utils';
 
 /**
  * Gathers data from the countries endpoint.
@@ -16,39 +12,37 @@ import {
  * }}
  */
 export const handler: APIGatewayProxyHandler = async (event, context) => {
-	try {
-		const countries = await fetchCountriesWithCapitals();
+  try {
+    const countries = await fetchCountriesWithCapitals();
 
-		if (!countries) {
-			throw new Error(ERRORS.COUNTRIES_NOT_FOUND);
-		}
+    if (!countries) {
+      throw new Error(ERRORS.COUNTRIES_NOT_FOUND);
+    }
 
-		const options = generateQuizOptions(countries); // Get the answers array
+    const options = generateQuizOptions(countries); // Get the answers array
 
-		if (!options) {
-			console.log(
-				"[question-handler] Something went wrong gathering the answers!"
-			);
-			throw new Error(ERRORS.OPTIONS_FAILED_TO_GENERATE);
-		}
+    if (!options) {
+      console.log('[question-handler] Something went wrong gathering the answers!');
+      throw new Error(ERRORS.OPTIONS_FAILED_TO_GENERATE);
+    }
 
-		const [correctAnswer] = options; // Get the correct answer from the getCountryAnswers call. (ALWAYS first)
+    const [correctAnswer] = options; // Get the correct answer from the getCountryAnswers call. (ALWAYS first)
 
-		return {
-			statusCode: 200,
-			body: JSON.stringify({
-				selected: correctAnswer.country,
-				options: format(options), // Shuffle, and only return the capitals
-			}),
-		};
-	} catch (error) {
-		console.log("[question-handler] " + error);
-		return {
-			statusCode: 500,
-			body: JSON.stringify({
-				message: ERRORS.GENERIC_ERROR_MESSAGE,
-				error: error,
-			}),
-		};
-	}
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        selected: correctAnswer.country,
+        options: format(options), // Shuffle, and only return the capitals
+      }),
+    };
+  } catch (error) {
+    console.log('[question-handler] ' + error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: ERRORS.GENERIC_ERROR_MESSAGE,
+        error: error,
+      }),
+    };
+  }
 };
